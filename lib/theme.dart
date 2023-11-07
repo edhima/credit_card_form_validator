@@ -1,4 +1,4 @@
-part of credit_card_form;
+part of credit_card_form_validator;
 
 class CreditCardDarkTheme implements CreditCardTheme {
   @override

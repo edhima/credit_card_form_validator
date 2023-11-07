@@ -1,4 +1,4 @@
-part of credit_card_form;
+part of credit_card_form_validator;
 
 class CreditCardForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
