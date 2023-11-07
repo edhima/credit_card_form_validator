@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 class TextInputWidget extends StatelessWidget {
   final String label;
-
   final CreditCardTheme theme;
   final double left;
   final double right;
@@ -17,6 +16,10 @@ class TextInputWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final double fontSize;
   final TextEditingController? controller;
+  final Function(String)? validate;
+  final String? numberValidationMessage;
+  final int? minLength;
+  final int? maxLength;
 
   const TextInputWidget({
     super.key,
@@ -33,6 +36,10 @@ class TextInputWidget extends StatelessWidget {
     this.left = 0,
     this.right = 0,
     this.top = 0,
+    this.validate,
+    this.numberValidationMessage,
+    this.minLength,
+    this.maxLength,
   });
 
   @override
@@ -58,7 +65,7 @@ class TextInputWidget extends StatelessWidget {
           ),
         ),
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         style: TextStyle(
           color: theme.textColor,
@@ -78,6 +85,13 @@ class TextInputWidget extends StatelessWidget {
             fontSize: fontSize,
           ),
         ),
+        validator: (String? value) {
+                        // Validate less that 13 digits +3 white spaces
+                        if (value!.isEmpty || value.length < maxLength!|| value.length > minLength!) {
+                          return numberValidationMessage;
+                        }
+                        return null;
+                      },
       ),
     );
   }

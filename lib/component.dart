@@ -1,6 +1,7 @@
 part of credit_card_form;
 
 class CreditCardForm extends StatefulWidget {
+  final GlobalKey<FormState> formKey;
   final String? cardNumberLabel;
   final String? cardHolderLabel;
   final bool? hideCardHolder;
@@ -17,6 +18,7 @@ class CreditCardForm extends StatefulWidget {
     super.key,
     this.theme,
     required this.onChanged,
+    required this.formKey,
     this.cardNumberLabel,
     this.cardHolderLabel,
     this.hideCardHolder = false,
@@ -83,106 +85,129 @@ class _CreditCardFormState extends State<CreditCardForm> {
           bottomRight: Radius.circular(10),
         ),
       ),
-      child: Column(
-        children: [
-          TextInputWidget(
-            theme: theme,
-            fontSize: widget.fontSize,
-            controller: controllers['card'],
-            label: widget.cardNumberLabel ?? 'Card number',
-            bottom: 1,
-            formatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(widget.cardNumberLength),
-              CardNumberInputFormatter(),
-            ],
-            onChanged: (val) {
-              Map img = CardUtils.getCardIcon(val);
-              CardType type =
-                  CardUtils.getCardTypeFrmNumber(val.replaceAll(' ', ''));
-              setState(() {
-                cardImg = img;
-                cardType = type;
-                params['card'] = val;
-              });
-              emitResult();
-            },
-            suffixIcon: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.asset(
-                'images/${cardImg['img']}',
-                package: 'credit_card_form',
-                width: cardImg['width'] as double?,
-              ),
-            ),
-          ),
-          if (widget.hideCardHolder == false)
+      child: Form(
+        key: widget.formKey,
+        child:Column(
+          children: [
             TextInputWidget(
               theme: theme,
               fontSize: widget.fontSize,
-              label: widget.cardHolderLabel ?? 'Card holder name',
-              controller: controllers['card_holder_name'],
+              controller: controllers['card'],
+              label: widget.cardNumberLabel ?? 'Card number',
               bottom: 1,
+              formatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(widget.cardNumberLength),
+                CardNumberInputFormatter(),
+              ],
               onChanged: (val) {
+                Map img = CardUtils.getCardIcon(val);
+                CardType type =
+                    CardUtils.getCardTypeFrmNumber(val.replaceAll(' ', ''));
                 setState(() {
-                  params['card_holder_name'] = val;
+                  cardImg = img;
+                  cardType = type;
+                  params['card'] = val;
                 });
                 emitResult();
               },
-              keyboardType: TextInputType.name,
-            ),
-          Row(
-            children: [
-              Expanded(
-                child: TextInputWidget(
-                  theme: theme,
-                  fontSize: widget.fontSize,
-                  label: widget.expiredDateLabel ?? 'MM/YY',
-                  right: 1,
-                  onChanged: (val) {
-                    setState(() {
-                      params['expired_date'] = val;
-                    });
-                    emitResult();
-                  },
-                  controller: controllers['expired_date'],
-                  formatters: [
-                    CardExpirationFormatter(),
-                    LengthLimitingTextInputFormatter(5)
-                  ],
+              maxLength: 16,
+              minLength: 16,
+              validate: (value){
+                print('1');
+              },
+              suffixIcon: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset(
+                  'images/${cardImg['img']}',
+                  package: 'credit_card_form',
+                  width: cardImg['width'] as double?,
                 ),
               ),
-              Expanded(
-                child: TextInputWidget(
-                  theme: theme,
-                  fontSize: widget.fontSize,
-                  label: widget.cvcLabel ?? 'CVC',
-                  controller: controllers['cvc'],
-                  password: true,
-                  onChanged: (val) {
-                    setState(() {
-                      params['cvc'] = val;
-                    });
-                    emitResult();
-                  },
-                  formatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(widget.cvcLength)
-                  ],
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: widget.cvcIcon ??
-                        Image.asset(
-                          'images/cvc.png',
-                          package: 'credit_card_form',
-                          height: 25,
-                        ),
+            ),
+            if (widget.hideCardHolder == false)
+              TextInputWidget(
+                theme: theme,
+                fontSize: widget.fontSize,
+                label: widget.cardHolderLabel ?? 'Card holder name',
+                controller: controllers['card_holder_name'],
+                bottom: 1,
+                maxLength: 100,
+                minLength: 3,
+                validate: (value){
+                  print('2');
+                },
+                onChanged: (val) {
+                  setState(() {
+                    params['card_holder_name'] = val;
+                  });
+                  emitResult();
+                },
+                keyboardType: TextInputType.name,
+              ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextInputWidget(
+                    theme: theme,
+                    fontSize: widget.fontSize,
+                    label: widget.expiredDateLabel ?? 'MM/YY',
+                    right: 1,
+                    maxLength: 5,
+                    minLength: 5,
+                    validate: (value){
+                      print('3');
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                        params['expired_date'] = val;
+                      });
+                      emitResult();
+                    },
+                    controller: controllers['expired_date'],
+                    formatters: [
+                      CardExpirationFormatter(),
+                      LengthLimitingTextInputFormatter(5)
+                    ],
                   ),
                 ),
-              )
-            ],
-          )
-        ],
+                Expanded(
+                  child: TextInputWidget(
+                    theme: theme,
+                    fontSize: widget.fontSize,
+                    label: widget.cvcLabel ?? 'CVC',
+                    controller: controllers['cvc'],
+                    password: true,
+                    maxLength: 4,
+                    minLength: 3,
+                    validate: (value){
+                      print('4');
+                    },
+                    onChanged: (val) {
+                      setState(() {
+                        params['cvc'] = val;
+                      });
+                      emitResult();
+                    },
+                    formatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(widget.cvcLength)
+                    ],
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: widget.cvcIcon ??
+                          Image.asset(
+                            'images/cvc.png',
+                            package: 'credit_card_form',
+                            height: 25,
+                          ),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
