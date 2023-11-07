@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TextInputWidget extends StatelessWidget {
+  final GlobalKey<FormFieldState<String>>? formKey;
   final String label;
   final CreditCardTheme theme;
   final double left;
@@ -16,13 +17,14 @@ class TextInputWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final double fontSize;
   final TextEditingController? controller;
-  final Function(String)? validate;
+  final String? Function(String?)? validator;
   final String? numberValidationMessage;
   final int? minLength;
   final int? maxLength;
 
   const TextInputWidget({
     super.key,
+    required this.formKey,
     required this.label,
     required this.theme,
     required this.fontSize,
@@ -36,7 +38,7 @@ class TextInputWidget extends StatelessWidget {
     this.left = 0,
     this.right = 0,
     this.top = 0,
-    this.validate,
+    this.validator,
     this.numberValidationMessage,
     this.minLength,
     this.maxLength,
@@ -66,6 +68,7 @@ class TextInputWidget extends StatelessWidget {
         ),
       ),
       child: TextFormField(
+        key: formKey,
         controller: controller,
         style: TextStyle(
           color: theme.textColor,
@@ -85,13 +88,13 @@ class TextInputWidget extends StatelessWidget {
             fontSize: fontSize,
           ),
         ),
-        validator: (String? value) {
-                        // Validate less that 13 digits +3 white spaces
-                        if (value!.isEmpty || value.length < maxLength!|| value.length > minLength!) {
-                          return numberValidationMessage;
-                        }
-                        return null;
-                      },
+        validator: validator ??
+                (String? value) {
+              if (value!.isEmpty || value.length < maxLength!|| value.length > minLength!) {
+                return numberValidationMessage;
+              }
+              return null;
+            },
       ),
     );
   }

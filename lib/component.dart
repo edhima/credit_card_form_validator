@@ -1,12 +1,49 @@
 part of credit_card_form_validator;
 
 class CreditCardForm extends StatefulWidget {
+  /// A form state key for this credit card form.
   final GlobalKey<FormState> formKey;
-  final String? cardNumberLabel;
-  final String? cardHolderLabel;
+
+
+  /// A FormFieldState key for card number text field.
+  final GlobalKey<FormFieldState<String>>? cardNumberLabel;
+
+  /// A FormFieldState key for card holder text field.
+  final GlobalKey<FormFieldState<String>>? cardHolderLabel;
+
+  /// A FormFieldState key for expiry date text field.
+  final GlobalKey<FormFieldState<String>>? expiredDateLabel;
+
+  /// A FormFieldState key for cvv code text field.
+  final GlobalKey<FormFieldState<String>>? cvcLabel;
+
+
+  /// Used to configure the auto validation of [FormField] and [Form] widgets.
+  final AutovalidateMode? autovalidateMode;
+
+  /// A validator for card number text field.
+  final String? Function(String?)? cardNumberValidator;
+
+  /// A validator for expiry date text field.
+  final String? Function(String?)? expiryDateValidator;
+
+  /// A validator for cvv code text field.
+  final String? Function(String?)? cvvValidator;
+
+  /// A validator for card holder text field.
+  final String? Function(String?)? cardHolderValidator;
+
+  /// Error message string when invalid cvv is entered.
+  final String cvvValidationMessage;
+
+  /// Error message string when invalid expiry date is entered.
+  final String dateValidationMessage;
+
+  /// Error message string when invalid credit card number is entered.
+  final String numberValidationMessage;
+
+
   final bool? hideCardHolder;
-  final String? expiredDateLabel;
-  final String? cvcLabel;
   final Widget? cvcIcon;
   final int? cardNumberLength;
   final int? cvcLength;
@@ -15,7 +52,7 @@ class CreditCardForm extends StatefulWidget {
   final Function(CreditCardResult) onChanged;
   final CreditCardController? controller;
   const CreditCardForm({
-    super.key,
+    Key? key,
     this.theme,
     required this.onChanged,
     required this.formKey,
@@ -29,7 +66,15 @@ class CreditCardForm extends StatefulWidget {
     this.cvcLength = 4,
     this.fontSize = 16,
     this.controller,
-  });
+    this.autovalidateMode,
+    this.cvvValidationMessage = 'Please input a valid CVV',
+    this.dateValidationMessage = 'Please input a valid date',
+    this.numberValidationMessage = 'Please input a valid number',
+    this.cardHolderValidator,
+    this.cardNumberValidator,
+    this.cvvValidator,
+    this.expiryDateValidator
+  }): super(key: key);
 
   @override
   State<CreditCardForm> createState() => _CreditCardFormState();
@@ -93,7 +138,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               theme: theme,
               fontSize: widget.fontSize,
               controller: controllers['card'],
-              label: widget.cardNumberLabel ?? 'Card number',
+              label: widget.cardHolderLabel!.toString() ?? 'Card number',
               bottom: 1,
               formatters: [
                 FilteringTextInputFormatter.digitsOnly,
@@ -113,9 +158,13 @@ class _CreditCardFormState extends State<CreditCardForm> {
               },
               maxLength: 16,
               minLength: 16,
-              validate: (value){
-                print('1');
-              },
+              validator: widget.cardNumberValidator ??
+                      (String? value) {
+                    if (value!.isEmpty || value.length < 16) {
+                      return widget.numberValidationMessage;
+                    }
+                    return null;
+                  },
               suffixIcon: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Image.asset(
@@ -124,18 +173,23 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   width: cardImg['width'] as double?,
                 ),
               ),
+              formKey: widget.cardNumberLabel,
             ),
             if (widget.hideCardHolder == false)
               TextInputWidget(
+                formKey: widget.cardHolderLabel,
                 theme: theme,
                 fontSize: widget.fontSize,
-                label: widget.cardHolderLabel ?? 'Card holder name',
+                label: widget.cardHolderLabel.toString() ?? 'Card holder name',
                 controller: controllers['card_holder_name'],
                 bottom: 1,
                 maxLength: 100,
                 minLength: 3,
-                validate: (value){
-                  print('2');
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "You must enter a description to proceed!";
+                  }
+                  return null;
                 },
                 onChanged: (val) {
                   setState(() {
@@ -149,14 +203,18 @@ class _CreditCardFormState extends State<CreditCardForm> {
               children: [
                 Expanded(
                   child: TextInputWidget(
+                    formKey: widget.expiredDateLabel,
                     theme: theme,
                     fontSize: widget.fontSize,
-                    label: widget.expiredDateLabel ?? 'MM/YY',
+                    label: widget.expiryDateValidator!.toString()?? 'MM/YY',
                     right: 1,
                     maxLength: 5,
                     minLength: 5,
-                    validate: (value){
-                      print('3');
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "You must enter a description to proceed!";
+                      }
+                      return null;
                     },
                     onChanged: (val) {
                       setState(() {
@@ -173,15 +231,19 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 ),
                 Expanded(
                   child: TextInputWidget(
+                    formKey:widget.cvcLabel ,
                     theme: theme,
                     fontSize: widget.fontSize,
-                    label: widget.cvcLabel ?? 'CVC',
+                    label: widget.cvcLabel.toString().toString() ?? 'CVC',
                     controller: controllers['cvc'],
                     password: true,
                     maxLength: 4,
                     minLength: 3,
-                    validate: (value){
-                      print('4');
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "You must enter a description to proceed!";
+                      }
+                      return null;
                     },
                     onChanged: (val) {
                       setState(() {
