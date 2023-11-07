@@ -2,7 +2,7 @@ part of credit_card_form_validator;
 
 class CreditCardForm extends StatefulWidget {
   /// A form state key for this credit card form.
-  final GlobalKey<FormState> formKey;
+  final GlobalKey<FormState>? formKey;
 
 
   /// A FormFieldState key for card number text field.
