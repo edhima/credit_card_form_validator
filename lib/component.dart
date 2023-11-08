@@ -2,7 +2,7 @@ part of credit_card_form_validator;
 
 class CreditCardForm extends StatefulWidget {
   /// A form state key for this credit card form.
-  final GlobalKey<FormState>? formKey;
+  final GlobalKey<FormState> formKey;
 
 
   /// A FormFieldState key for card number text field.
@@ -47,10 +47,10 @@ class CreditCardForm extends StatefulWidget {
   final Widget? cvcIcon;
   final int? cardNumberLength;
   final int? cvcLength;
-  final double fontSize;
+  final double? fontSize;
   final CreditCardTheme? theme;
   final Function(CreditCardResult) onChanged;
-  final CreditCardController? controller;
+  final CreditCardController controller;
   const CreditCardForm({
     Key? key,
     this.theme,
@@ -65,7 +65,7 @@ class CreditCardForm extends StatefulWidget {
     this.cardNumberLength = 16,
     this.cvcLength = 4,
     this.fontSize = 16,
-    this.controller,
+    required this.controller,
     this.autovalidateMode,
     this.cvvValidationMessage = 'Please input a valid CVV',
     this.dateValidationMessage = 'Please input a valid date',
@@ -136,9 +136,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
           children: [
             TextInputWidget(
               theme: theme,
-              fontSize: widget.fontSize,
+              fontSize: widget.fontSize!,
               controller: controllers['card'],
-              label: widget.cardHolderLabel!.toString() ?? 'Card number',
+              label: widget.cardHolderLabel.toString() ?? 'Card number',
               bottom: 1,
               formatters: [
                 FilteringTextInputFormatter.digitsOnly,
@@ -179,7 +179,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               TextInputWidget(
                 formKey: widget.cardHolderLabel,
                 theme: theme,
-                fontSize: widget.fontSize,
+                fontSize: widget.fontSize!,
                 label: widget.cardHolderLabel.toString() ?? 'Card holder name',
                 controller: controllers['card_holder_name'],
                 bottom: 1,
@@ -205,8 +205,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   child: TextInputWidget(
                     formKey: widget.expiredDateLabel,
                     theme: theme,
-                    fontSize: widget.fontSize,
-                    label: widget.expiryDateValidator!.toString()?? 'MM/YY',
+                    fontSize: widget.fontSize!,
+                    label: widget.expiryDateValidator.toString()?? 'MM/YY',
                     right: 1,
                     maxLength: 5,
                     minLength: 5,
@@ -233,7 +233,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   child: TextInputWidget(
                     formKey:widget.cvcLabel ,
                     theme: theme,
-                    fontSize: widget.fontSize,
+                    fontSize: widget.fontSize!,
                     label: widget.cvcLabel.toString().toString() ?? 'CVC',
                     controller: controllers['cvc'],
                     password: true,
