@@ -1,7 +1,7 @@
 name: credit_card_form_validator
-description: Flutter Credit/Debit Card Form.
-version: 0.0.7
-homepage: https://github.com/necessarylion/flutter-credit-card-form
+description: Flutter Credit/Debit Card Form with validation.
+version: 0.0.8
+homepage: https://github.com/edhima/credit_card_form_validator.git
 
 environment:
   sdk: '>=2.18.2 <3.0.0'

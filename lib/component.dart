@@ -138,7 +138,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               theme: theme,
               fontSize: widget.fontSize!,
               controller: controllers['card'],
-              label: widget.cardHolderLabel.toString() ?? 'Card number',
+              label: 'Card number',
               bottom: 1,
               formatters: [
                 FilteringTextInputFormatter.digitsOnly,
@@ -169,7 +169,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 padding: const EdgeInsets.all(8),
                 child: Image.asset(
                   'images/${cardImg['img']}',
-                  package: 'credit_card_form',
+                  package: 'credit_card_form_validator',
                   width: cardImg['width'] as double?,
                 ),
               ),
@@ -180,7 +180,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 formKey: widget.cardHolderLabel,
                 theme: theme,
                 fontSize: widget.fontSize!,
-                label: widget.cardHolderLabel.toString() ?? 'Card holder name',
+                label: 'Card holder name',
                 controller: controllers['card_holder_name'],
                 bottom: 1,
                 maxLength: 100,
@@ -206,7 +206,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     formKey: widget.expiredDateLabel,
                     theme: theme,
                     fontSize: widget.fontSize!,
-                    label: widget.expiryDateValidator.toString()?? 'MM/YY',
+                    label: 'MM/YY',
                     right: 1,
                     maxLength: 5,
                     minLength: 5,
@@ -234,7 +234,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     formKey:widget.cvcLabel ,
                     theme: theme,
                     fontSize: widget.fontSize!,
-                    label: widget.cvcLabel.toString().toString() ?? 'CVC',
+                    label: 'CVC',
                     controller: controllers['cvc'],
                     password: true,
                     maxLength: 4,
@@ -260,7 +260,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       child: widget.cvcIcon ??
                           Image.asset(
                             'images/cvc.png',
-                            package: 'credit_card_form',
+                            package: 'credit_card_form_validator',
                             height: 25,
                           ),
                     ),
