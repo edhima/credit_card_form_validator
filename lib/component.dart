@@ -161,7 +161,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
               validator: widget.cardNumberValidator ??
                       (String? value) {
                     if (value!.isEmpty || value.length < 16) {
-                      return widget.numberValidationMessage;
+                      return 'Enter valid card number';
                     }
                     return null;
                   },
@@ -187,7 +187,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 minLength: 3,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "You must enter a description to proceed!";
+                    return "You must enter a valid Name";
                   }
                   return null;
                 },
@@ -212,7 +212,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     minLength: 5,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "You must enter a description to proceed!";
+                        return "Enter valid date.";
                       }
                       return null;
                     },
@@ -241,7 +241,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     minLength: 3,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "You must enter a description to proceed!";
+                        return "Enter CVC";
                       }
                       return null;
                     },
